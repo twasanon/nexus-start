@@ -21,7 +21,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden text-zinc-200 font-sans selection:bg-purple-500/30">
+    <div className="relative w-full min-h-screen overflow-y-auto md:overflow-hidden text-zinc-200 font-sans selection:bg-purple-500/30">
       {/* Background with overlay */}
       {BACKGROUND_IMAGES.map((img, index) => (
         <div 
@@ -38,7 +38,7 @@ const App: React.FC = () => {
       <WeatherWidget />
 
       {/* Main Content */}
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6 gap-16 pb-[30rem]">
+      <main className="relative z-10 flex flex-col items-center md:justify-center md:min-h-screen p-6 gap-16 pb-8 md:pb-[30rem]">
         
         {/* Clock Section */}
         <section className="animate-fade-in flex flex-col items-center mt-12 md:mt-0">
@@ -59,8 +59,9 @@ const App: React.FC = () => {
       </main>
 
       {/* Bottom Floating Dashboard - Uses Grid for perfect sizing */}
-      <div className="absolute bottom-0 left-0 right-0 p-10 flex justify-center animate-fade-in z-20 pointer-events-none">
-        <div className="pointer-events-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 w-full max-w-[1600px]">
+      {/* On mobile: relative/in-flow so content scrolls. On desktop: absolute at bottom */}
+      <div className="relative md:absolute md:bottom-0 left-0 right-0 p-6 md:p-10 flex justify-center animate-fade-in z-20 md:pointer-events-none">
+        <div className="md:pointer-events-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-8 w-full max-w-[1600px]">
           <SportsTicker />
           <CryptoTicker />
           <QuickNotes />
