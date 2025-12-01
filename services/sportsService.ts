@@ -1,75 +1,121 @@
 import { PremierLeagueMatch } from '../types';
 
+const BASE_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1';
+
+// Helper to map raw ESPN event to our internal structure
+const mapEventToMatch = (event: any): PremierLeagueMatch => {
+  const competition = event.competitions[0];
+  const home = competition.competitors.find((c: any) => c.homeAway === 'home');
+  const away = competition.competitors.find((c: any) => c.homeAway === 'away');
+  
+  // Handle inconsistent API structure: Status can be at root or inside competition
+  const statusObj = event.status || competition.status;
+  const status = statusObj?.type?.state || 'pre'; // 'pre', 'in', 'post'
+  
+  let displayStatus = 'UPCOMING';
+  if (status === 'in') displayStatus = 'LIVE';
+  if (status === 'post') displayStatus = 'FT';
+  
+  const getAbbrev = (team: any) => team.team.abbreviation || team.team.name.substring(0, 3).toUpperCase();
+  
+  // Handle clock
+  const clock = statusObj?.displayClock || competition.status?.displayClock || '00:00';
+
+  return {
+    id: event.id,
+    homeTeam: getAbbrev(home),
+    awayTeam: getAbbrev(away),
+    homeScore: home.score?.displayValue || home.score || '0',
+    awayScore: away.score?.displayValue || away.score || '0',
+    status: displayStatus,
+    minute: clock,
+    isLive: status === 'in',
+    date: new Date(event.date).getTime()
+  };
+};
+
 export const getEPLScores = async (): Promise<PremierLeagueMatch[]> => {
   try {
-    // ESPN Public API for English Premier League
-    const response = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard');
-    const data = await response.json();
+    // 1. Fetch Scoreboard (Live & Upcoming window)
+    const scoreboardRes = await fetch(`${BASE_URL}/scoreboard`);
+    const scoreboardData = await scoreboardRes.json();
+    const scoreboardEvents = scoreboardData.events || [];
+    const allScoreboardMatches = scoreboardEvents.map(mapEventToMatch);
+
+    const liveMatches = allScoreboardMatches
+        .filter((m: PremierLeagueMatch) => m.status === 'LIVE')
+        .sort((a: PremierLeagueMatch, b: PremierLeagueMatch) => b.date - a.date);
     
-    if (!data.events) return [];
+    const upcomingMatches = allScoreboardMatches
+        .filter((m: PremierLeagueMatch) => m.status === 'UPCOMING')
+        .sort((a: PremierLeagueMatch, b: PremierLeagueMatch) => a.date - b.date);
 
-    const allMatches: PremierLeagueMatch[] = data.events.map((event: any) => {
-      const competition = event.competitions[0];
-      const home = competition.competitors.find((c: any) => c.homeAway === 'home');
-      const away = competition.competitors.find((c: any) => c.homeAway === 'away');
-      const status = event.status.type.state; // 'pre', 'in', 'post'
-      
-      // Map ESPN status to our display format
-      let displayStatus = 'UPCOMING';
-      if (status === 'in') displayStatus = 'LIVE';
-      if (status === 'post') displayStatus = 'FT';
-      
-      // Shorten team names to 3 letters if possible, or use abbrev
-      const getAbbrev = (team: any) => team.team.abbreviation || team.team.name.substring(0, 3).toUpperCase();
+    // If we have a live match, that is priority #1
+    if (liveMatches.length > 0) {
+        return [
+            liveMatches[0], 
+            ...upcomingMatches.filter(m => m.id !== liveMatches[0].id)
+        ].slice(0, 3);
+    }
 
-      return {
-        id: event.id,
-        homeTeam: getAbbrev(home),
-        awayTeam: getAbbrev(away),
-        homeScore: home.score || '0',
-        awayScore: away.score || '0',
-        status: displayStatus,
-        minute: event.status.displayClock,
-        isLive: status === 'in',
-        date: new Date(event.date).getTime()
-      };
-    });
+    // 2. If no live match, fetch Standings to find Top 3 Teams and get the most recent result
+    let featuredMatch: PremierLeagueMatch | null = null;
 
-    // Strategy: Always return exactly 3 matches if possible.
-    // Slot 1: The "Headline" match. Either the most recent finished game OR the current live game.
-    // Slot 2 & 3: The next upcoming games.
-    
-    const live = allMatches.filter(m => m.status === 'LIVE').sort((a, b) => b.date - a.date);
-    const finished = allMatches.filter(m => m.status === 'FT').sort((a, b) => b.date - a.date); // Newest finished first
-    const upcoming = allMatches.filter(m => m.status === 'UPCOMING').sort((a, b) => a.date - b.date); // Soonest upcoming first
+    try {
+        const standingsRes = await fetch('https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings');
+        const standingsData = await standingsRes.json();
+        const entries = standingsData.children?.[0]?.standings?.entries || [];
+        
+        // Check top 3 teams in order
+        const topTeams = entries.slice(0, 3).map((e: any) => e.team.id);
 
+        for (const teamId of topTeams) {
+            // Fetch Schedule for the team
+            const scheduleRes = await fetch(`${BASE_URL}/teams/${teamId}/schedule`);
+            const scheduleData = await scheduleRes.json();
+            const teamEvents = scheduleData.events || [];
+            
+            // Find last completed match
+            const completedTeamMatches = teamEvents
+                .map(mapEventToMatch)
+                .filter((m: PremierLeagueMatch) => m.status === 'FT')
+                .sort((a: PremierLeagueMatch, b: PremierLeagueMatch) => b.date - a.date); // Newest first
+
+            if (completedTeamMatches.length > 0) {
+                featuredMatch = completedTeamMatches[0];
+                break; // Found the top-most relevant match, stop searching
+            }
+        }
+    } catch (e) {
+        console.warn("Failed to fetch standings context", e);
+    }
+
+    // 3. Assemble Result
     const result: PremierLeagueMatch[] = [];
 
-    // 1. Pick the primary match
-    if (live.length > 0) {
-      result.push(live[0]);
-    } else if (finished.length > 0) {
-      result.push(finished[0]);
-    } else if (upcoming.length > 0) {
-      // If literally nothing has happened yet (season start), pick first upcoming
-      result.push(upcoming[0]);
+    // Slot 1: Featured Match (Top Team Result) or Fallback to generic scoreboard result
+    if (featuredMatch) {
+        result.push(featuredMatch);
+    } else {
+        const finishedGeneric = allScoreboardMatches
+            .filter((m: PremierLeagueMatch) => m.status === 'FT')
+            .sort((a: PremierLeagueMatch, b: PremierLeagueMatch) => b.date - a.date);
+        if (finishedGeneric.length > 0) {
+            result.push(finishedGeneric[0]);
+        }
     }
 
-    // 2. Fill remaining 2 slots with UPCOMING matches
-    const primaryId = result[0]?.id;
-    let nextUp = upcoming.filter(m => m.id !== primaryId);
-    
-    result.push(...nextUp.slice(0, 2));
-
-    // 3. If we still don't have 3, backfill with more FINISHED matches (history)
-    if (result.length < 3) {
-      const moreHistory = finished.filter(m => m.id !== primaryId);
-      const needed = 3 - result.length;
-      result.push(...moreHistory.slice(0, needed));
+    // Slot 2 & 3: Upcoming Matches
+    const usedIds = new Set(result.map(r => r.id));
+    for (const match of upcomingMatches) {
+        if (result.length >= 3) break;
+        if (!usedIds.has(match.id)) {
+            result.push(match);
+            usedIds.add(match.id);
+        }
     }
-    
-    // 4. If STILL < 3 (rare, e.g., only 1 match exists in API window), return what we have
-    return result.slice(0, 3);
+
+    return result;
 
   } catch (error) {
     console.error("Failed to fetch EPL scores", error);
