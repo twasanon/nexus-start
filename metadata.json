@@ -1,0 +1,7 @@
+{
+  "name": "Nexus Start Page",
+  "description": "A high-performance, aesthetic start page with tree-structured links, multi-engine search, weather, and live dashboard widgets.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
