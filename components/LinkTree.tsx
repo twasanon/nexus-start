@@ -28,6 +28,8 @@ const LinkTree: React.FC<LinkTreeProps> = ({ group }) => {
             <a
               key={item.url}
               href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group/item flex items-center gap-6 text-zinc-400 hover:text-white transition-colors relative pl-10 py-1"
             >
               {/* Horizontal branch line */}

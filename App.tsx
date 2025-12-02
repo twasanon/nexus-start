@@ -4,6 +4,7 @@ import LinkTree from './components/LinkTree';
 import Clock from './components/Clock';
 import SearchBar from './components/SearchBar';
 import WeatherWidget from './components/WeatherWidget';
+import SpotifyWidget from './components/SpotifyWidget';
 import SportsTicker from './components/SportsTicker';
 import CryptoTicker from './components/CryptoTicker';
 import QuickNotes from './components/QuickNotes';
@@ -36,6 +37,7 @@ const App: React.FC = () => {
       
       {/* Top Widgets */}
       <WeatherWidget />
+      <SpotifyWidget />
 
       {/* Main Content */}
       <main className="relative z-10 flex flex-col items-center md:justify-center md:min-h-screen p-6 gap-16 pb-8 md:pb-[30rem]">

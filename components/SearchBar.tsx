@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ChevronDown, Sparkles, Command } from 'lucide-react';
+import { Search, ChevronDown, Sparkles, Command, Key, ExternalLink } from 'lucide-react';
 import { SearchEngine } from '../types';
-import { quickAskGemini } from '../services/geminiService';
+import { quickAskGemini, hasGeminiApiKey, saveGeminiApiKey, removeGeminiApiKey } from '../services/geminiService';
 
 const SearchBar: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -9,7 +9,15 @@ const SearchBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [geminiResult, setGeminiResult] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [apiKeyInput, setApiKeyInput] = useState('');
+  const [hasKey, setHasKey] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Check for existing key on mount
+  useEffect(() => {
+    setHasKey(hasGeminiApiKey());
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -26,9 +34,24 @@ const SearchBar: React.FC = () => {
     if (!query.trim()) return;
 
     if (engine === SearchEngine.GEMINI_API) {
+      // Check if API key exists
+      if (!hasGeminiApiKey()) {
+        setShowApiKeyModal(true);
+        return;
+      }
+
       setIsLoading(true);
       setGeminiResult(null);
       const answer = await quickAskGemini(query);
+      
+      // Handle special responses
+      if (answer === 'API_KEY_REQUIRED' || answer === 'API_KEY_INVALID') {
+        setIsLoading(false);
+        setHasKey(false);
+        setShowApiKeyModal(true);
+        return;
+      }
+      
       setGeminiResult(answer);
       setIsLoading(false);
       return;
@@ -48,6 +71,20 @@ const SearchBar: React.FC = () => {
     }
 
     window.location.href = url;
+  };
+
+  const handleSaveApiKey = () => {
+    if (apiKeyInput.trim()) {
+      saveGeminiApiKey(apiKeyInput.trim());
+      setHasKey(true);
+      setShowApiKeyModal(false);
+      setApiKeyInput('');
+    }
+  };
+
+  const handleRemoveApiKey = () => {
+    removeGeminiApiKey();
+    setHasKey(false);
   };
 
   return (
@@ -137,6 +174,61 @@ const SearchBar: React.FC = () => {
              </div>
              <button onClick={() => setGeminiResult(null)} className="text-zinc-500 hover:text-white">✕</button>
            </div>
+        </div>
+      )}
+
+      {/* API Key Input Modal */}
+      {showApiKeyModal && (
+        <div className="absolute top-full left-0 right-0 mt-4 p-6 bg-zinc-950/95 backdrop-blur-xl border border-purple-500/30 rounded-xl shadow-2xl animate-slide-up z-40">
+          <div className="flex items-start gap-4">
+            <div className="p-2 bg-purple-500/10 rounded-lg">
+              <Key className="w-6 h-6 text-purple-400" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-bold text-zinc-300 mb-2 uppercase tracking-wider">Gemini API Key Required</h3>
+              <p className="text-zinc-400 text-sm mb-4">
+                Enter your Gemini API key to use Quick Ask. Your key is stored locally in your browser.
+              </p>
+              <div className="flex gap-2 mb-3">
+                <input
+                  type="password"
+                  value={apiKeyInput}
+                  onChange={(e) => setApiKeyInput(e.target.value)}
+                  placeholder="AIza..."
+                  className="flex-1 bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-purple-500/50"
+                  onKeyDown={(e) => e.key === 'Enter' && handleSaveApiKey()}
+                />
+                <button
+                  onClick={handleSaveApiKey}
+                  className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-lg text-purple-300 hover:bg-purple-500/30 transition-colors text-sm font-medium"
+                >
+                  Save
+                </button>
+              </div>
+              <a
+                href="https://aistudio.google.com/apikey"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs text-zinc-500 hover:text-purple-400 transition-colors"
+              >
+                Get a free API key from Google AI Studio <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+            <button onClick={() => setShowApiKeyModal(false)} className="text-zinc-500 hover:text-white">✕</button>
+          </div>
+        </div>
+      )}
+
+      {/* Show key status indicator when Gemini API is selected */}
+      {engine === SearchEngine.GEMINI_API && hasKey && (
+        <div className="absolute -top-8 right-0 flex items-center gap-2">
+          <span className="text-xs text-zinc-500 font-mono">API key saved</span>
+          <button
+            onClick={handleRemoveApiKey}
+            className="text-xs text-zinc-600 hover:text-red-400 transition-colors"
+          >
+            (remove)
+          </button>
         </div>
       )}
     </div>
