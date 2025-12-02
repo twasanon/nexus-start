@@ -1,83 +1,226 @@
-# Nexus Start Page - Project Context
+# Nexus Start - Project Context
 
-## Overview
-Nexus Start Page is a high-performance, minimalist, "Cyberpunk-lite" dashboard designed for developers. It serves as a browser start page featuring link management, real-time data widgets, productivity tools, and AI integration.
+## Product Overview
 
-## Tech Stack
-- **Framework:** React 19 + Vite 6
-- **Styling:** Tailwind CSS (Utility-first, dark mode centric)
-- **Icons:** Lucide React
-- **Language:** TypeScript
-- **State Management:** React Local State (`useState`, `useEffect`)
-- **Persistence:** `localStorage` (for Brain Dump note)
-- **AI:** `@google/genai` (Gemini 2.5 Flash)
+**Nexus Start** is a premium browser start page and desktop dashboard application targeting developers, power users, and productivity enthusiasts. It combines beautiful design with powerful customization to create the ultimate "home" for your browser.
 
-## Design System & Aesthetics
-- **Theme:** Dark Mode / Cyberpunk / Himalayan.
-- **Color Palette:**
-  - Backgrounds: `zinc-950` with high transparency (80%) for a "Glassmorphism" effect.
-  - Text: High contrast `white` for values, `zinc-400` for labels.
-  - Accents: Minimal color usage. Green (Live/Success), Red (Market Down), Purple (AI/Selection).
-- **Typography:**
-  - Headings/Data: `JetBrains Mono` (Monospace) for a terminal/technical feel.
-  - UI/Labels: `Inter` (Sans-serif) for readability.
-- **Layout:**
-  - **Top:** Absolute positioned Weather widget.
-  - **Center:** Clock (Greeting + Time), Search Bar, Link Trees (Grid).
-  - **Bottom:** Dashboard Widgets (Grid).
-  - **Sizing:** Fixed height (`h-96`) for bottom widgets to ensure perfect alignment.
-- **Background:**
-  - Array of high-quality URLs (Unsplash).
-  - Rotates automatically every 3 hours.
-  - Heavy overlay (`bg-black/50` to `bg-black/90`) to ensure text legibility.
+### Target Market
+- Developers and engineers
+- Power users and productivity enthusiasts
+- Remote workers
+- Anyone who wants a better browser start page
 
-## Features & Logic
+### Value Proposition
+- Replace boring browser home pages with a personalized dashboard
+- Centralize quick links, widgets, and tools in one place
+- Beautiful, customizable themes that look professional
+- Native desktop app experience (not just a website)
 
-### 1. Clock & Greeting
-- **Logic:** Updates every second.
-- **Greeting:** Personalized ("Good evening, Bishal"). Time-based logic (<12, <18, else).
+### Pricing
+- **Free:** Basic features, single theme
+- **Pro ($10):** All widgets, all themes, custom styling
+- **Pro+ ($3/mo):** Cloud sync, multi-device, priority support
 
-### 2. Search Bar (`components/SearchBar.tsx`)
-- **Engines:** Google (Default), Gemini (Web), ChatGPT, Claude, Kimi, DuckDuckGo.
-- **Quick Ask (Gemini API):**
-  - Uses `process.env.API_KEY` (polyfilled in Vite config).
-  - Model: `gemini-2.5-flash`.
-  - Config: `thinkingBudget: 0` for speed.
-  - **UI:** Dropdown selector, glass-morphism input, modal result display.
+---
 
-### 3. Link Trees (`components/LinkTree.tsx`)
-- **Structure:** Defined in `constants.tsx`.
-- **Visuals:** Tree branch visualization using CSS borders and absolute positioning to mimic a directory structure.
+## Technical Architecture
 
-### 4. Premier League Ticker (`components/SportsTicker.tsx`)
-- **API:** ESPN Public API (undocumented/unofficial).
-- **Logic (`services/sportsService.ts`):**
-  - **Priority 1:** Is there a **LIVE** match? Show it.
-  - **Priority 2:** If no live match, fetch **Standings** to find the #1 Team. Fetch that team's **Schedule** to find their last **Finished (FT)** game.
-  - **Slots:** Always fills 3 slots.
-    - Slot 1: Live Match OR Top Team's Last Result.
-    - Slot 2 & 3: Next upcoming matches.
+### Current Stack
+| Layer | Technology |
+|-------|------------|
+| Framework | React 19 |
+| Build Tool | Vite 6 |
+| Language | TypeScript |
+| Styling | Tailwind CSS (utility-first) |
+| Icons | Lucide React |
+| State | React hooks + localStorage |
+| Desktop | Tauri (planned) |
 
-### 5. Crypto Market (`components/CryptoTicker.tsx`)
-- **API:** CoinGecko (Free public endpoint).
-- **Data:** BTC, ETH, SOL.
-- **Visuals:** Green/Red coloring based on 24h percentage change.
+### Project Structure
+```
+nexus-start/
+├── components/           # React components
+│   ├── Clock.tsx         # Time and greeting
+│   ├── SearchBar.tsx     # Multi-engine search + Quick Ask
+│   ├── LinkTree.tsx      # Link group display
+│   ├── CommandPalette.tsx # ⌘K command interface
+│   ├── SettingsPanel.tsx # Tabbed settings UI
+│   ├── WeatherWidget.tsx
+│   ├── SpotifyWidget.tsx
+│   ├── SportsTicker.tsx
+│   ├── CryptoTicker.tsx
+│   ├── QuickNotes.tsx
+│   └── PomodoroTimer.tsx
+├── services/             # Business logic & APIs
+│   ├── settingsService.ts # Settings persistence
+│   ├── geminiService.ts   # AI integration
+│   ├── spotifyService.ts  # Spotify OAuth + API
+│   ├── weatherService.ts
+│   ├── cryptoService.ts
+│   └── sportsService.ts
+├── constants.tsx         # Default configs
+├── types.ts              # TypeScript interfaces
+├── App.tsx               # Root component
+└── index.tsx             # Entry point
+```
 
-### 6. Brain Dump (`components/QuickNotes.tsx`)
-- **Persistence:** Saves to `localStorage` key `nexus_quick_note` on every keystroke.
-- **Design:** Minimalist textarea, mono font, no scrollbars (hidden).
+---
 
-### 7. Focus Timer (`components/PomodoroTimer.tsx`)
-- **Duration:** 25 minutes (Standard Pomodoro).
-- **Controls:** Play/Pause, Reset.
-- **Visual:** Huge font size (`text-8xl`) for visibility at a glance.
+## Design System
 
-## Project Structure
-- `index.tsx` & `index.html`: Entry points.
-- `constants.tsx`: Configuration for Links, Images, and Icons.
-- `types.ts`: TypeScript interfaces for robustness.
-- `services/`: API fetching logic separated from UI.
+### Theme: Cyberpunk / Himalayan Dark
 
-## Deployment Config
-- **Vite Config:** Handles `base` path logic (`/nexus-start/` for GitHub Pages vs `/` for localhost).
-- **Env:** Polyfills `process.env` to prevent crashes in browser environments.
+**Philosophy:** Dark-first, high contrast, glassmorphism effects, minimal color accents.
+
+### Color Palette (Default Dark)
+| Token | Value | Usage |
+|-------|-------|-------|
+| `bg-primary` | `zinc-950` | Main background |
+| `bg-glass` | `zinc-950/80` | Card backgrounds |
+| `border` | `white/10` | Borders, dividers |
+| `text-primary` | `white` | Values, headings |
+| `text-secondary` | `zinc-400` | Labels, hints |
+| `accent-purple` | `purple-500` | AI, selection |
+| `accent-green` | `green-500` | Success, live |
+| `accent-red` | `red-500` | Error, down |
+
+### Typography
+| Usage | Font | Weight |
+|-------|------|--------|
+| Headings, Data | JetBrains Mono | 700 |
+| UI Labels | Inter | 400-600 |
+| Code | JetBrains Mono | 400 |
+
+### Spacing & Layout
+- **Padding:** `p-4` (mobile), `p-6` (tablet), `p-8` (desktop)
+- **Gap:** `gap-4` to `gap-8`
+- **Border Radius:** `rounded-xl` (16px), `rounded-2xl` (24px)
+- **Max Width:** `1600px` for content
+
+### Effects
+- **Blur:** `backdrop-blur-sm` to `backdrop-blur-xl`
+- **Shadows:** `shadow-lg`, `shadow-2xl`
+- **Transitions:** `transition-all duration-200`
+
+---
+
+## Features Deep Dive
+
+### 1. Command Palette (⌘K)
+- Raycast/Spotlight-inspired interface
+- Quick access to search and settings
+- Keyboard-first navigation
+- Extensible action system
+
+### 2. Settings System
+- Tabbed interface (General, APIs, Links, Widgets, Wallpaper)
+- Real-time save with visual feedback
+- Settings stored in localStorage as JSON
+- Event-based updates across components
+
+### 3. Widget Architecture
+Each widget:
+- Self-contained component
+- Own service for data fetching
+- Responds to settings changes
+- Can be toggled on/off
+- Fixed height for consistent layout
+
+### 4. Theming (Planned)
+- CSS custom properties for colors
+- Theme object structure
+- Light/dark mode detection
+- Theme switching without reload
+
+---
+
+## API Integrations
+
+| Service | API | Auth | Rate Limits |
+|---------|-----|------|-------------|
+| Weather | wttr.in | None | Generous |
+| Crypto | CoinGecko | None | 50/min |
+| Sports | ESPN | None | Undocumented |
+| Gemini | Google AI | API Key | 60/min |
+| Spotify | Web API | OAuth | 100/day |
+
+---
+
+## Deployment
+
+### Web (Current)
+- GitHub Pages at `/nexus-start/`
+- Auto-deploy via GitHub Actions
+- Vite build with base path handling
+
+### Desktop (Planned)
+- Tauri for native wrapper
+- DMG for macOS
+- MSI/EXE for Windows
+- AppImage for Linux
+
+---
+
+## Development Workflow
+
+### Local Development
+```bash
+pnpm install
+pnpm dev          # Start dev server at :5173
+pnpm build        # Production build
+pnpm preview      # Preview production build
+```
+
+### Code Standards
+- TypeScript strict mode
+- Functional components with hooks
+- Services for business logic
+- Components for UI only
+- Props interfaces for all components
+
+---
+
+## Roadmap Summary
+
+### Phase 1: Polish (Current)
+- [x] Core widgets
+- [x] Settings system
+- [x] Command palette
+- [x] Wallpaper customization
+- [ ] Theme system
+- [ ] More widgets
+
+### Phase 2: Desktop App
+- [ ] Tauri integration
+- [ ] Menu bar presence
+- [ ] Run on login
+- [ ] Native preferences
+
+### Phase 3: Monetization
+- [ ] License system
+- [ ] Payment integration
+- [ ] Landing page
+- [ ] Launch
+
+### Phase 4: Growth
+- [ ] Cloud sync
+- [ ] More platforms
+- [ ] Community themes
+- [ ] Widget marketplace
+
+---
+
+## Key Files Reference
+
+| File | Purpose |
+|------|---------|
+| `App.tsx` | Root layout, settings state, keyboard handlers |
+| `settingsService.ts` | All user preferences |
+| `CommandPalette.tsx` | ⌘K interface |
+| `SettingsPanel.tsx` | Settings UI with tabs |
+| `constants.tsx` | Default links, wallpapers |
+| `FEATURES.md` | Full feature roadmap |
+
+---
+
+*Last updated: December 2024*

@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { getSetting, onSettingsChange } from '../services/settingsService';
 
 const Clock: React.FC = () => {
   const [time, setTime] = useState(new Date());
+  const [userName, setUserName] = useState(getSetting('userName'));
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Listen for settings changes
+  useEffect(() => {
+    const unsubscribe = onSettingsChange((settings) => {
+      setUserName(settings.userName);
+    });
+    return unsubscribe;
   }, []);
 
   const formatTime = (date: Date) => {
@@ -28,9 +38,10 @@ const Clock: React.FC = () => {
 
   const getGreeting = () => {
     const hour = time.getHours();
-    if (hour < 12) return "Good morning, Bishal.";
-    if (hour < 18) return "Good afternoon, Bishal.";
-    return "Good evening, Bishal.";
+    const name = userName || 'friend';
+    if (hour < 12) return `good morning, ${name}.`;
+    if (hour < 18) return `good afternoon, ${name}.`;
+    return `good evening, ${name}.`;
   };
 
   return (

@@ -1,9 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Timer, Play, Pause, RotateCcw } from 'lucide-react';
+import { getSetting, onSettingsChange } from '../services/settingsService';
 
 const PomodoroTimer: React.FC = () => {
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [duration, setDuration] = useState(getSetting('pomodoroMinutes'));
+  const [timeLeft, setTimeLeft] = useState(duration * 60);
   const [isActive, setIsActive] = useState(false);
+
+  // Listen for settings changes
+  useEffect(() => {
+    const unsubscribe = onSettingsChange((settings) => {
+      const newDuration = settings.pomodoroMinutes;
+      setDuration(newDuration);
+      // Only update timeLeft if timer is not running and at initial state
+      if (!isActive && timeLeft === duration * 60) {
+        setTimeLeft(newDuration * 60);
+      }
+    });
+    return unsubscribe;
+  }, [isActive, timeLeft, duration]);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
@@ -23,7 +38,7 @@ const PomodoroTimer: React.FC = () => {
   
   const resetTimer = () => {
     setIsActive(false);
-    setTimeLeft(25 * 60);
+    setTimeLeft(duration * 60);
   };
 
   const formatTime = (seconds: number) => {

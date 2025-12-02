@@ -1,7 +1,9 @@
 // Spotify API Service
 // Requires a Spotify Developer App: https://developer.spotify.com/dashboard
 
-const SPOTIFY_CLIENT_ID = (import.meta as any).env?.VITE_SPOTIFY_CLIENT_ID || '';
+import { getSetting } from './settingsService';
+
+const getSpotifyClientId = () => getSetting('spotifyClientId');
 const REDIRECT_URI = typeof window !== 'undefined' 
   ? `${window.location.origin}${window.location.pathname}`
   : '';
@@ -18,8 +20,9 @@ export interface SpotifyTrack {
 
 // Generate auth URL for Spotify login
 export const getSpotifyAuthUrl = (): string => {
+  const clientId = getSpotifyClientId();
   const params = new URLSearchParams({
-    client_id: SPOTIFY_CLIENT_ID,
+    client_id: clientId,
     response_type: 'token',
     redirect_uri: REDIRECT_URI,
     scope: SCOPES,
@@ -110,6 +113,6 @@ export const disconnectSpotify = (): void => {
 
 // Check if Spotify is configured
 export const isSpotifyConfigured = (): boolean => {
-  return !!SPOTIFY_CLIENT_ID;
+  return !!getSpotifyClientId();
 };
 

@@ -1,58 +1,133 @@
-# Nexus Start Page
+# Nexus Start
 
-A high-performance, minimalist, cyberpunk-inspired browser start page for developers. Features link management, real-time data widgets, productivity tools, and AI integration.
+> A premium, customizable browser start page and desktop dashboard for power users and developers.
 
-## Features
+![Nexus Start](https://img.shields.io/badge/version-1.0.0-purple) ![License](https://img.shields.io/badge/license-Proprietary-blue) ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Web-lightgrey)
 
-- **Clock & Greeting** — Personalized time-based greeting
-- **Multi-Engine Search** — Google, Gemini, ChatGPT, Claude, Kimi, DuckDuckGo
-- **Quick Ask** — Instant Gemini AI responses
-- **Link Trees** — Organized quick-access links
-- **Spotify Now Playing** — Shows current track (only when playing)
-- **Premier League Ticker** — Live scores & upcoming matches
+---
+
+## ✨ Features
+
+### Core
+- **Smart Clock** — Personalized time-based greeting
+- **Universal Search** — Google, Gemini, ChatGPT, Claude, Kimi, DuckDuckGo
+- **Quick Ask AI** — Instant answers powered by Gemini
+- **Link Trees** — Organized quick-access bookmarks
+- **Command Palette** — ⌘K for everything
+
+### Widgets
+- **Spotify Now Playing** — Live track display
+- **Sports Ticker** — Premier League scores
 - **Crypto Market** — BTC, ETH, SOL prices
-- **Brain Dump** — Persistent scratchpad notes
-- **Focus Timer** — 25-minute Pomodoro timer
+- **Brain Dump** — Persistent scratchpad
+- **Focus Timer** — Customizable Pomodoro
 
-## Tech Stack
+### Customization
+- **Themes** — Light/Dark mode, multiple color schemes
+- **Custom Wallpapers** — Your own backgrounds
+- **Widget Toggle** — Show/hide any widget
+- **Custom Links** — Edit all link groups
+- **Settings Sync** — All preferences stored locally
 
-React 19 • Vite 6 • TypeScript • Tailwind CSS • Lucide Icons
+---
 
-## Run Locally
+## 🚀 Getting Started
 
-**Prerequisites:** Node.js, pnpm
+### Web Version
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-## Optional Integrations
+Open [http://localhost:5173](http://localhost:5173)
 
-### Gemini Quick Ask
+### Mac App (Coming Soon)
 
-When you select "Quick Ask" search, you'll be prompted to enter your API key. It's stored locally in your browser (never sent to any server except Google's API).
+Download the `.dmg` from [Releases](https://github.com/yourname/nexus-start/releases) and drag to Applications.
 
-**Get your free key:** [Google AI Studio](https://aistudio.google.com/apikey)
+---
 
-### Spotify Now Playing
+## ⚙️ Configuration
 
-1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Click **Create App**
-3. Set Redirect URI to your site URL (e.g., `https://yourname.github.io/nexus-start/`)
-4. Copy the **Client ID**
-5. Create `.env.local`:
-   ```
-   VITE_SPOTIFY_CLIENT_ID=your_client_id_here
-   ```
-6. Rebuild and deploy — click "connect spotify" on the page
+Press **⌘K** → **Settings** to configure:
 
-> **Note:** Spotify Client ID is safe to include in public builds (it's a public identifier, not a secret).
+| Tab | Settings |
+|-----|----------|
+| **General** | Your name |
+| **API Keys** | Gemini API Key, Spotify Client ID |
+| **Links** | Customize all link groups |
+| **Widgets** | Toggle visibility, timer duration |
+| **Wallpaper** | Custom images, grayscale, rotation |
 
-## Deploy
+### API Setup
 
-Configured for GitHub Pages. Builds to `/nexus-start/` base path.
+| Service | Get Key From | Required For |
+|---------|--------------|--------------|
+| Gemini | [Google AI Studio](https://aistudio.google.com/apikey) | Quick Ask AI |
+| Spotify | [Developer Dashboard](https://developer.spotify.com/dashboard) | Now Playing |
 
-```bash
-pnpm build
-```
+All settings stored locally — your data never leaves your device.
+
+---
+
+## 🎨 Themes
+
+| Theme | Style |
+|-------|-------|
+| Nexus Dark | Default cyberpunk dark |
+| Tokyo Night | Purple-accented dark |
+| Nord | Cool blue minimalist |
+| Dracula | Classic dark with pink accents |
+| Nexus Light | Clean light mode |
+| *More coming...* | |
+
+---
+
+## 📦 Tech Stack
+
+- **Framework:** React 19 + TypeScript
+- **Build:** Vite 6
+- **Styling:** Tailwind CSS
+- **Icons:** Lucide React
+- **Desktop:** Tauri (coming)
+
+---
+
+## 🗺️ Roadmap
+
+See [FEATURES.md](./FEATURES.md) for the full roadmap including:
+
+- [ ] Native Mac app with menu bar
+- [ ] More themes (10+ planned)
+- [ ] Calendar, GitHub, Todo widgets
+- [ ] Windows & Linux apps
+- [ ] Cloud sync (Pro)
+
+---
+
+## 💰 Pricing (Coming Soon)
+
+| Tier | Price | Includes |
+|------|-------|----------|
+| **Free** | $0 | Basic widgets, 1 theme |
+| **Pro** | $10 once | All widgets, all themes, custom CSS |
+| **Pro+** | $3/mo | Pro + cloud sync, priority support |
+
+---
+
+## 📄 License
+
+Proprietary. See [LICENSE](./LICENSE) for details.
+
+---
+
+## 🤝 Support
+
+- [Documentation](./docs)
+- [Issues](https://github.com/yourname/nexus-start/issues)
+- Email: support@nexusstart.app
+
+---
+
+*Built with ♥ for people who live in their browser.*

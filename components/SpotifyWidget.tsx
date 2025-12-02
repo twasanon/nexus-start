@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Music, ExternalLink } from 'lucide-react';
+import { Music } from 'lucide-react';
 import {
   getSpotifyAuthUrl,
   extractTokenFromUrl,
@@ -9,11 +9,21 @@ import {
   isSpotifyConfigured,
   SpotifyTrack,
 } from '../services/spotifyService';
+import { onSettingsChange } from '../services/settingsService';
 
 const SpotifyWidget: React.FC = () => {
   const [token, setToken] = useState<string | null>(null);
   const [track, setTrack] = useState<SpotifyTrack | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isConfigured, setIsConfigured] = useState(isSpotifyConfigured());
+
+  // Listen for settings changes
+  useEffect(() => {
+    const unsubscribe = onSettingsChange(() => {
+      setIsConfigured(isSpotifyConfigured());
+    });
+    return unsubscribe;
+  }, []);
 
   // Check for token on mount
   useEffect(() => {
@@ -52,7 +62,7 @@ const SpotifyWidget: React.FC = () => {
   }, [token]);
 
   // Don't render if Spotify isn't configured
-  if (!isSpotifyConfigured()) {
+  if (!isConfigured) {
     return null;
   }
 

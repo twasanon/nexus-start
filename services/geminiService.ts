@@ -1,20 +1,20 @@
 import { GoogleGenAI } from "@google/genai";
-
-const GEMINI_KEY_STORAGE = 'nexus_gemini_api_key';
+import { getSetting, setSetting } from './settingsService';
 
 // Get stored Gemini API key
 export const getGeminiApiKey = (): string | null => {
-  return localStorage.getItem(GEMINI_KEY_STORAGE);
+  const key = getSetting('geminiApiKey');
+  return key || null;
 };
 
 // Save Gemini API key
 export const saveGeminiApiKey = (key: string): void => {
-  localStorage.setItem(GEMINI_KEY_STORAGE, key);
+  setSetting('geminiApiKey', key);
 };
 
 // Remove Gemini API key
 export const removeGeminiApiKey = (): void => {
-  localStorage.removeItem(GEMINI_KEY_STORAGE);
+  setSetting('geminiApiKey', '');
 };
 
 // Check if key exists
