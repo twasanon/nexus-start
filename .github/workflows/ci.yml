@@ -23,8 +23,11 @@ jobs:
         with:
           node-version: 24
 
+      # The repo currently tracks only pnpm-lock.yaml, so `npm ci` cannot run
+      # (it requires a package-lock.json). Use plain npm install for now and
+      # switch back to `npm ci` once a package-lock.json is committed.
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build
