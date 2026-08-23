@@ -1,6 +1,6 @@
 // Settings Service - Manages all user configuration stored in localStorage
 
-const SETTINGS_KEY = 'nexus_settings';
+const SETTINGS_KEY = 'atrium_settings';
 
 export interface LinkItem {
   label: string;
@@ -13,7 +13,7 @@ export interface LinkGroup {
   items: LinkItem[];
 }
 
-export interface NexusSettings {
+export interface AtriumSettings {
   // General
   userName: string;
   
@@ -38,7 +38,7 @@ export interface NexusSettings {
   wallpaperRotationHours: number;
 }
 
-const defaultSettings: NexusSettings = {
+const defaultSettings: AtriumSettings = {
   userName: 'friend',
   geminiApiKey: '',
   spotifyClientId: '',
@@ -54,7 +54,7 @@ const defaultSettings: NexusSettings = {
   wallpaperRotationHours: 3,
 };
 
-export const getSettings = (): NexusSettings => {
+export const getSettings = (): AtriumSettings => {
   try {
     const stored = localStorage.getItem(SETTINGS_KEY);
     if (stored) {
@@ -66,30 +66,30 @@ export const getSettings = (): NexusSettings => {
   return defaultSettings;
 };
 
-export const saveSettings = (settings: Partial<NexusSettings>): void => {
+export const saveSettings = (settings: Partial<AtriumSettings>): void => {
   try {
     const current = getSettings();
     const updated = { ...current, ...settings };
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(updated));
     // Dispatch event so components can react to settings changes
-    window.dispatchEvent(new CustomEvent('nexus-settings-changed', { detail: updated }));
+    window.dispatchEvent(new CustomEvent('atrium-settings-changed', { detail: updated }));
   } catch (e) {
     console.error('Error saving settings:', e);
   }
 };
 
-export const getSetting = <K extends keyof NexusSettings>(key: K): NexusSettings[K] => {
+export const getSetting = <K extends keyof AtriumSettings>(key: K): AtriumSettings[K] => {
   return getSettings()[key];
 };
 
-export const setSetting = <K extends keyof NexusSettings>(key: K, value: NexusSettings[K]): void => {
+export const setSetting = <K extends keyof AtriumSettings>(key: K, value: AtriumSettings[K]): void => {
   saveSettings({ [key]: value });
 };
 
 // Hook helper for settings changes
-export const onSettingsChange = (callback: (settings: NexusSettings) => void): (() => void) => {
-  const handler = (e: CustomEvent<NexusSettings>) => callback(e.detail);
-  window.addEventListener('nexus-settings-changed', handler as EventListener);
-  return () => window.removeEventListener('nexus-settings-changed', handler as EventListener);
+export const onSettingsChange = (callback: (settings: AtriumSettings) => void): (() => void) => {
+  const handler = (e: CustomEvent<AtriumSettings>) => callback(e.detail);
+  window.addEventListener('atrium-settings-changed', handler as EventListener);
+  return () => window.removeEventListener('atrium-settings-changed', handler as EventListener);
 };
 

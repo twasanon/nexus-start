@@ -5,14 +5,14 @@ const QuickNotes: React.FC = () => {
   const [note, setNote] = useState('');
 
   useEffect(() => {
-    const saved = localStorage.getItem('nexus_quick_note');
+    const saved = localStorage.getItem('atrium_quick_note');
     if (saved) setNote(saved);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setNote(newValue);
-    localStorage.setItem('nexus_quick_note', newValue);
+    localStorage.setItem('atrium_quick_note', newValue);
   };
 
   return (

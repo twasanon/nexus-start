@@ -19,7 +19,7 @@ import {
   Image,
   RotateCw
 } from 'lucide-react';
-import { getSettings, saveSettings, NexusSettings, LinkGroup } from '../services/settingsService';
+import { getSettings, saveSettings, AtriumSettings, LinkGroup } from '../services/settingsService';
 import { LINK_GROUPS, BACKGROUND_IMAGES } from '../constants';
 
 type SettingsTab = 'general' | 'apis' | 'links' | 'widgets' | 'wallpaper';
@@ -30,7 +30,7 @@ interface SettingsPanelProps {
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState<SettingsTab>('general');
-  const [settings, setSettings] = useState<NexusSettings>(getSettings());
+  const [settings, setSettings] = useState<AtriumSettings>(getSettings());
   const [savedIndicator, setSavedIndicator] = useState<string | null>(null);
   const [linkGroups, setLinkGroups] = useState<LinkGroup[]>(
     settings.customLinks || LINK_GROUPS.map(g => ({ title: g.title, items: [...g.items] }))
@@ -44,7 +44,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     setTimeout(() => setSavedIndicator(null), 1500);
   };
 
-  const handleSettingChange = (key: keyof NexusSettings, value: any) => {
+  const handleSettingChange = (key: keyof AtriumSettings, value: any) => {
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
     saveSettings({ [key]: value });
@@ -144,8 +144,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
 
 // General Tab
 const GeneralTab: React.FC<{
-  settings: NexusSettings;
-  onChange: (key: keyof NexusSettings, value: any) => void;
+  settings: AtriumSettings;
+  onChange: (key: keyof AtriumSettings, value: any) => void;
   savedIndicator: string | null;
 }> = ({ settings, onChange, savedIndicator }) => (
   <div className="space-y-6">
@@ -169,8 +169,8 @@ const GeneralTab: React.FC<{
 
 // APIs Tab
 const APIsTab: React.FC<{
-  settings: NexusSettings;
-  onChange: (key: keyof NexusSettings, value: any) => void;
+  settings: AtriumSettings;
+  onChange: (key: keyof AtriumSettings, value: any) => void;
   savedIndicator: string | null;
 }> = ({ settings, onChange, savedIndicator }) => (
   <div className="space-y-6">
@@ -349,8 +349,8 @@ const LinksTab: React.FC<{
 
 // Widgets Tab
 const WidgetsTab: React.FC<{
-  settings: NexusSettings;
-  onChange: (key: keyof NexusSettings, value: any) => void;
+  settings: AtriumSettings;
+  onChange: (key: keyof AtriumSettings, value: any) => void;
   savedIndicator: string | null;
 }> = ({ settings, onChange, savedIndicator }) => {
   const widgets = [
@@ -420,9 +420,9 @@ const WidgetsTab: React.FC<{
 
 // Wallpaper Tab
 const WallpaperTab: React.FC<{
-  settings: NexusSettings;
+  settings: AtriumSettings;
   wallpapers: string[];
-  onChange: (key: keyof NexusSettings, value: any) => void;
+  onChange: (key: keyof AtriumSettings, value: any) => void;
   onWallpapersChange: (urls: string[]) => void;
   savedIndicator: string | null;
 }> = ({ settings, wallpapers, onChange, onWallpapersChange, savedIndicator }) => {

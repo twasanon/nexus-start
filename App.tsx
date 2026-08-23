@@ -10,12 +10,12 @@ import CryptoTicker from './components/CryptoTicker';
 import QuickNotes from './components/QuickNotes';
 import PomodoroTimer from './components/PomodoroTimer';
 import CommandPalette from './components/CommandPalette';
-import { getSettings, onSettingsChange, NexusSettings } from './services/settingsService';
+import { getSettings, onSettingsChange, AtriumSettings } from './services/settingsService';
 
 const App: React.FC = () => {
   const [bgIndex, setBgIndex] = useState(0);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
-  const [settings, setSettings] = useState<NexusSettings>(getSettings());
+  const [settings, setSettings] = useState<AtriumSettings>(getSettings());
 
   // Get wallpapers (custom or default)
   const wallpapers = settings.customWallpapers || BACKGROUND_IMAGES;
@@ -116,7 +116,7 @@ const App: React.FC = () => {
         >
           ⌘K for commands
         </button>
-        {' • Nexus Start'}
+        {' • Atrium'}
       </div>
 
       {/* Command Palette */}

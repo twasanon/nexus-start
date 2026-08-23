@@ -1,8 +1,8 @@
-# Nexus Start
+# Atrium
 
 > A premium, customizable browser start page and desktop dashboard for power users and developers.
 
-![Nexus Start](https://img.shields.io/badge/version-1.0.0-purple) ![License](https://img.shields.io/badge/license-Proprietary-blue) ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Web-lightgrey)
+![Atrium](https://img.shields.io/badge/version-1.0.0-purple) ![License](https://img.shields.io/badge/license-Proprietary-blue) ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Web-lightgrey)
 
 ---
 
@@ -27,7 +27,7 @@
 - **Custom Wallpapers** — Your own backgrounds
 - **Widget Toggle** — Show/hide any widget
 - **Custom Links** — Edit all link groups
-- **Settings Sync** — All preferences stored locally
+- **Settings Import/Export** — Save/restore via `.atrium` files
 
 ---
 
@@ -44,7 +44,7 @@ Open [http://localhost:5173](http://localhost:5173)
 
 ### Mac App (Coming Soon)
 
-Download the `.dmg` from [Releases](https://github.com/yourname/nexus-start/releases) and drag to Applications.
+Download the `.dmg` from [Releases](https://github.com/yourname/atrium/releases) and drag to Applications.
 
 ---
 
@@ -75,11 +75,11 @@ All settings stored locally — your data never leaves your device.
 
 | Theme | Style |
 |-------|-------|
-| Nexus Dark | Default cyberpunk dark |
+| Atrium Dark | Default cyberpunk dark |
 | Tokyo Night | Purple-accented dark |
 | Nord | Cool blue minimalist |
 | Dracula | Classic dark with pink accents |
-| Nexus Light | Clean light mode |
+| Atrium Light | Clean light mode |
 | *More coming...* | |
 
 ---
@@ -101,8 +101,8 @@ See [FEATURES.md](./FEATURES.md) for the full roadmap including:
 - [ ] Native Mac app with menu bar
 - [ ] More themes (10+ planned)
 - [ ] Calendar, GitHub, Todo widgets
+- [ ] Settings import/export (.atrium files)
 - [ ] Windows & Linux apps
-- [ ] Cloud sync (Pro)
 
 ---
 
@@ -111,8 +111,10 @@ See [FEATURES.md](./FEATURES.md) for the full roadmap including:
 | Tier | Price | Includes |
 |------|-------|----------|
 | **Free** | $0 | Basic widgets, 1 theme |
-| **Pro** | $10 once | All widgets, all themes, custom CSS |
-| **Pro+** | $3/mo | Pro + cloud sync, priority support |
+| **Pro** | **$10 one-time** | All widgets, all themes, custom CSS, import/export |
+| | | **Free lifetime upgrades** — No subscriptions, no catch |
+
+Pay once, own forever. All future features included at no extra cost.
 
 ---
 
@@ -125,8 +127,8 @@ Proprietary. See [LICENSE](./LICENSE) for details.
 ## 🤝 Support
 
 - [Documentation](./docs)
-- [Issues](https://github.com/yourname/nexus-start/issues)
-- Email: support@nexusstart.app
+- [Issues](https://github.com/yourname/atrium/issues)
+- Email: support@atriumapp.com
 
 ---
 

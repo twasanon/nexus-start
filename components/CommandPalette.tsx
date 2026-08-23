@@ -140,7 +140,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
 
             {/* Footer */}
             <div className="flex items-center justify-between px-4 py-3 border-t border-white/10 bg-zinc-950/50">
-              <span className="text-xs text-zinc-500 font-mono">Nexus Command Palette</span>
+              <span className="text-xs text-zinc-500 font-mono">Atrium Command Palette</span>
               <div className="flex items-center gap-2 text-xs text-zinc-500">
                 <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded border border-zinc-700">↑↓</kbd>
                 <span>navigate</span>

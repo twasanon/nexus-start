@@ -1,8 +1,8 @@
-# Nexus Start - Project Context
+# Atrium - Project Context
 
 ## Product Overview
 
-**Nexus Start** is a premium browser start page and desktop dashboard application targeting developers, power users, and productivity enthusiasts. It combines beautiful design with powerful customization to create the ultimate "home" for your browser.
+**Atrium** is a premium browser start page and desktop dashboard application targeting developers, power users, and productivity enthusiasts. It combines beautiful design with powerful customization to create the ultimate "home" for your browser.
 
 ### Target Market
 - Developers and engineers
@@ -18,8 +18,9 @@
 
 ### Pricing
 - **Free:** Basic features, single theme
-- **Pro ($10):** All widgets, all themes, custom styling
-- **Pro+ ($3/mo):** Cloud sync, multi-device, priority support
+- **Pro ($10 one-time):** All widgets, all themes, custom styling, settings import/export
+  - **Free lifetime upgrades** — No subscriptions, no catch
+  - Pay once, own forever
 
 ---
 
@@ -38,7 +39,7 @@
 
 ### Project Structure
 ```
-nexus-start/
+atrium/
 ├── components/           # React components
 │   ├── Clock.tsx         # Time and greeting
 │   ├── SearchBar.tsx     # Multi-engine search + Quick Ask
@@ -149,7 +150,7 @@ Each widget:
 ## Deployment
 
 ### Web (Current)
-- GitHub Pages at `/nexus-start/`
+- GitHub Pages at `/atrium/`
 - Auto-deploy via GitHub Actions
 - Vite build with base path handling
 
@@ -203,7 +204,7 @@ pnpm preview      # Preview production build
 - [ ] Launch
 
 ### Phase 4: Growth
-- [ ] Cloud sync
+- [ ] Settings import/export (.atrium files)
 - [ ] More platforms
 - [ ] Community themes
 - [ ] Widget marketplace

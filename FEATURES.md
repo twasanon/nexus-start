@@ -1,10 +1,10 @@
-# Nexus Start - Feature Roadmap
+# Atrium - Feature Roadmap
 
 ## Product Vision
 
-**Nexus Start** is a premium, customizable browser start page and desktop dashboard for power users and developers. Available as a native Mac app with plans for Windows and Linux.
+**Atrium** is a premium, customizable browser start page and desktop dashboard for power users and developers. Available as a native Mac app with plans for Windows and Linux.
 
-**Price Point:** $10 one-time purchase (or $3/month subscription for cloud sync)
+**Price Point:** $10 one-time purchase with free lifetime upgrades (no catch, no subscriptions)
 
 ---
 
@@ -39,7 +39,7 @@
 
 ### 2.1 Color Themes (Pre-built)
 - [ ] **Dark Themes:**
-  - Nexus Dark (current default)
+  - Atrium Dark (current default)
   - Tokyo Night
   - Dracula
   - Nord
@@ -49,7 +49,7 @@
   - Synthwave '84
   
 - [ ] **Light Themes:**
-  - Nexus Light
+  - Atrium Light
   - GitHub Light
   - Solarized Light
   - Nord Light
@@ -161,24 +161,63 @@
 
 ---
 
-## Phase 5: Data & Sync
+## Phase 5: Settings Import/Export
 
-### 5.1 Cloud Sync (Premium)
-- [ ] Account system (email/password or OAuth)
-- [ ] Settings sync across devices
-- [ ] Notes/todos sync
-- [ ] End-to-end encryption option
+### 5.1 Custom File Format
+- [ ] Create `.atrium` file extension (or `.atriumconfig`)
+- [ ] JSON-based format with versioning
+- [ ] File association on macOS (double-click to import)
+- [ ] Custom file icon for `.atrium` files
 
-### 5.2 Import/Export
-- [ ] Export all settings as JSON
-- [ ] Import settings from file
-- [ ] Backup to iCloud/Google Drive
-- [ ] Migration from other start pages
+### 5.2 Export Settings
+- [ ] Export all settings to `.atrium` file
+- [ ] Include: themes, widgets, links, wallpapers, API keys (encrypted)
+- [ ] Export from Settings → General → Export
+- [ ] Choose save location (default: Downloads)
+- [ ] File naming: `atrium-backup-YYYY-MM-DD.atrium`
 
-### 5.3 Data Portability
-- [ ] Export notes as Markdown
-- [ ] Export todos as CSV/JSON
-- [ ] API for external integrations
+### 5.3 Import Settings
+- [ ] Import from `.atrium` file
+- [ ] Drag-and-drop file onto app
+- [ ] Import from Settings → General → Import
+- [ ] File picker with `.atrium` filter
+- [ ] Validation and error handling
+- [ ] Merge vs replace options
+- [ ] Preview before import
+
+### 5.4 File Format Structure
+```json
+{
+  "version": "1.0.0",
+  "exportedAt": "2024-12-01T12:00:00Z",
+  "settings": {
+    "userName": "...",
+    "geminiApiKey": "encrypted...",
+    "spotifyClientId": "...",
+    "customLinks": [...],
+    "customWallpapers": [...],
+    "widgets": {...},
+    "theme": {...}
+  },
+  "metadata": {
+    "appVersion": "1.0.0",
+    "platform": "macOS"
+  }
+}
+```
+
+### 5.5 Security & Privacy
+- [ ] API keys encrypted in export (AES-256)
+- [ ] Optional password protection for exports
+- [ ] Clear warning about sensitive data
+- [ ] Import validation (version checking)
+- [ ] Rollback option after import
+
+### 5.6 Data Portability
+- [ ] Export notes as Markdown (separate export)
+- [ ] Export todos as CSV/JSON (separate export)
+- [ ] Manual backup to iCloud/Google Drive (user-initiated)
+- [ ] Migration guide from other start pages
 
 ---
 
@@ -210,7 +249,7 @@
 
 ## Phase 7: Monetization & Business
 
-### 7.1 Pricing Tiers
+### 7.1 Pricing Model
 
 **Free Tier:**
 - Basic widgets (clock, search, weather, notes)
@@ -218,19 +257,15 @@
 - Local storage only
 - Community support
 
-**Pro ($10 one-time):**
-- All widgets
-- All themes
-- Custom themes
+**Pro ($10 one-time purchase):**
+- All widgets (current + future)
+- All themes (current + future)
+- Custom themes & CSS
+- Settings import/export (.atrium files)
 - No watermark
 - Email support
-
-**Pro+ ($3/month or $24/year):**
-- Everything in Pro
-- Cloud sync
-- Multiple devices
-- Priority support
-- Early access to new features
+- **Free lifetime upgrades** - All future features included at no extra cost
+- **No subscriptions** - Pay once, own forever
 
 ### 7.2 Payment Integration
 - [ ] Gumroad integration
@@ -239,7 +274,7 @@
 - [ ] License key system
 
 ### 7.3 Marketing
-- [ ] Landing page (nexusstart.app)
+- [ ] Landing page (atriumapp.com)
 - [ ] Product Hunt launch
 - [ ] Hacker News Show HN
 - [ ] Twitter/X presence
@@ -260,14 +295,14 @@
 ### Proposed Stack Additions
 - **Desktop:** Tauri (Rust + WebView)
 - **State:** Zustand or Jotai (replace useState)
-- **Sync:** Supabase or Firebase
-- **Payments:** LemonSqueezy SDK
-- **Analytics:** PostHog or Plausible
+- **File I/O:** Tauri file system API for import/export
+- **Payments:** LemonSqueezy SDK or Gumroad
+- **Analytics:** PostHog or Plausible (privacy-focused)
 - **Error Tracking:** Sentry
 
 ### File Structure (Proposed)
 ```
-nexus-start/
+atrium/
 ├── src/
 │   ├── components/
 │   │   ├── widgets/        # All widget components
@@ -306,8 +341,8 @@ nexus-start/
    - Launch on Gumroad
 
 4. **Long-term (Month 3+):**
-   - Cloud sync
-   - Windows/Linux
+   - Settings import/export (.atrium files)
+   - Windows/Linux apps
    - Browser extensions
    - Mobile apps
 
